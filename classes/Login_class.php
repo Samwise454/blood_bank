@@ -1,5 +1,5 @@
 <?php
-    class Signup extends Db {
+    class Login extends Db {
         //response handler
         public function resHandler($code, $msg) {
             /*
@@ -26,7 +26,7 @@
             return $response;
         }
 
-        public function addUser($data) {
+        public function loginUser($data) {
             //now you create all your signup code
             //don't forget to return responses.
             //remember, $data is an array containing user data
@@ -40,6 +40,6 @@
                 }
             */
 
-            //return $this->resHandler("testing", "Everything is working");
+            return $this->resHandler("testing", "Everything is working");
         }
     }

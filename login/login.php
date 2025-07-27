@@ -20,13 +20,13 @@
     // check the method used and make sure it's a POST method for signup
     if ($method === "POST") {
         // now we instantiate a class and pass the data to a method in the class
-        $userData = new Signup();
+        $userData = new Login();
 
         /*
             below, we are sending back response to the front,
             on completion of the processing.
         */
-        echo json_encode($userData->addUser($data));
+        echo json_encode($userData->loginUser($data));
     }
     else {
         echo json_encode(["error"=>"No data sent!!"]);
