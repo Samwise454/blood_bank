@@ -40,6 +40,17 @@
                 }
             */
 
-            return $this->resHandler("testing", "Everything is working");
+            $db_name = 'u211176085_bloodbankdb';
+
+            $sql = "SELECT users FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$db_name' AND TABLE_NAME = users";
+            $stmt = $this->con()->prepare($sql);
+             
+            if ($stmt->execute()) {
+                return $this->resHandler("testing", "Everything is working");
+            }
+            else {
+                return $this->resHandler("testing", "Everything is not working");
+            }
+
         }
     }
