@@ -40,6 +40,6 @@
                 }
             */
 
-
+            return $this->resHandler("testing", "Everything is working");
         }
     }
