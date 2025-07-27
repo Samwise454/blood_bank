@@ -40,12 +40,16 @@
                 }
             */
 
-            $db_name = 'u211176085_bloodbankdb';
+            $username = "Sam";
 
-            $sql = "SELECT users FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$db_name' AND TABLE_NAME = users";
+            $sql = "SELECT * FROM users WHERE username=?";
             $stmt = $this->con()->prepare($sql);
-             
-            if ($stmt->execute()) {
+            $stmt->execute([$username]);
+            $result = $stmt->fetchAll();
+
+            $count_result = count($result);
+
+            if ($count_result > 0) {
                 return $this->resHandler("testing", "Everything is working");
             }
             else {
