@@ -40,21 +40,7 @@
                 }
             */
 
-            $username = "Sam";
-
-            $sql = "SELECT * FROM users WHERE username=?";
-            $stmt = $this->con()->prepare($sql);
-            $stmt->execute([$username]);
-            $result = $stmt->fetchAll();
-
-            $count_result = count($result);
-
-            if ($count_result > 0) {
-                return $this->resHandler("testing", "Everything is working");
-            }
-            else {
-                return $this->resHandler("testing", "Everything is not working");
-            }
+           return $this->resHandler("testing", "Everything is working");
 
         }
     }

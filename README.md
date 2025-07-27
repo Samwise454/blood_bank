@@ -11,7 +11,7 @@ for example creating a class to control newsletter request
 # Newsletter_class.php
 
 # cors.php
-This script will controls cross origin resource sharing
+This script will control cross origin resource sharing
 
 # About the database connection
 # Db_class.php
