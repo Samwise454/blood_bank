@@ -35,6 +35,14 @@ class Signup extends Db
         //don't forget to return responses.
         //remember, $data is an array containing user data
 
+        $firstname = ucfirst(trim($data["firstname"]));
+        $middlename = ucfirst(trim($data["middlename"]));
+        $othername = ucfirst(trim($data["othername"]));
+        $email = $data["email"];
+        $tel = $data["tel"];
+        $gender = strtolower($data["gender"]);
+        $password = $data["password"];
+        $token = random_int(100000000000, 999999999999);
 
         /*
             respHandler usage sample
@@ -44,44 +52,54 @@ class Signup extends Db
                 return $this->resHandler("bbe_001", "Empty or invalid input");
             }
         */
+        $genderArray = ["male", "female"];
 
-        if (empty($data['username']) || empty($data['password'])) {
-            return $this->resHandler("bbe_001", "Username and password are required!");
+        if (empty($firstname) || empty($middlename) || empty($othername) || empty($email) || empty($tel) || empty($gender) || empty($password)) {
+            return $this->resHandler("er01", "Check for empty input");
         }
-
-        // Password length check
-        if (strlen($data['password']) < 6) {
-            return $this->resHandler("bbe_003", "Password must be at least 6 characters!");
+        else if (!preg_match("/^[A-Za-z-']*$/", $firstname)) {
+            return $this->resHandler("er02", "Invalid name");
         }
-
-        // Check if username exists
-        $sql = "SELECT id FROM userData WHERE username = :username LIMIT 1";
-        $stmt = $this->con()->prepare($sql);
-        $stmt->bindParam(":username", $data['username']);
-        $stmt->execute();
-
-        if ($stmt->rowCount() > 0) {
-            return $this->resHandler("bbe_004", "Username already exists!");
+        else if (!preg_match("/^[A-Za-z-']*$/", $middlename)) {
+            return $this->resHandler("er02", "Invalid name");
         }
-
-        // Hash password
-        $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
-
-        // Insert user
-        $sql = "INSERT INTO userData (username, password) 
-        VALUES (:username, :password)";
-        $stmt = $this->con()->prepare($sql);
-
-        $stmt->bindParam(":username", $data['username']);
-        $stmt->bindParam(":password", $hashedPassword);
-
-        if ($stmt->execute()) {
-            return $this->resHandler("bbs_001", "Signup successful!");
-        } else {
-            return $this->resHandler("bbe_005", "Something went wrong, please try again.");
+        else if (!preg_match("/^[A-Za-z-']*$/", $othername)) {
+            return $this->resHandler("er02", "Invalid name");
         }
+        else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return $this->resHandler("er03", "Check email");
+        }
+        else if (mb_strlen($tel) < 11) {
+            return $this->resHandler("er04", "Check Phone number");
+        }
+        else if (!in_array($gender, $genderArray)) {
+            return $this->resHandler("er05", "Invalid gender");
+        }
+        else if (strlen($data['password']) < 6) {// Password length check
+            return $this->resHandler("er06", "Password must be at least 6 characters!");
+        }
+        else {
+            // Check if email exists
+            $sql = "SELECT email FROM userData WHERE email=? LIMIT 1";
+            $stmt = $this->con()->prepare($sql);
+            $stmt->execute([$email]);
+            $result = $stmt->fetchColumn();//eg sammy@gmail.com
 
-        return $this->resHandler("testing", "Everything is working");
+            if ($result) {
+                return $this->resHandler("er07", "Already registerd!");
+            }
+            else {
+                // Hash password
+                $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
 
+                // Insert user
+                $sql = "INSERT INTO userData (firstName, lastName, middleName, gender, email, tel, password, token) 
+                VALUES (?,?,?,?,?,?,?,?)";
+                $stmt = $this->con()->prepare($sql);
+                $stmt->execute([$firstname, $middlename, $othername, $gender, $email, $tel, $hashedPassword, $token]);
+
+                return $this->resHandler("er08", "Signup successful!");
+            }
+        }
     }
 }
