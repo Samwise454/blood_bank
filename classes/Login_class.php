@@ -72,9 +72,9 @@
                         $stmt->execute([$token, $email]);
                         
                         $data = [
-                            "id"=>$result[0]["id"],
-                            "lastname"=>$result[0]["lastname"],
-                            "tel"=>$result[0]["tel"],
+                            "id"=>$result["id"],
+                            "lastname"=>$result["lastname"],
+                            "tel"=>$result["tel"],
                             "token"=>$token
                         ];
                         return $data;
