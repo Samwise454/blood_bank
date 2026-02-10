@@ -42,7 +42,8 @@ class Signup extends Db
         $tel = $data["tel"];
         $gender = strtolower($data["gender"]);
         $password = $data["password"];
-        $token = random_int(100000000000, 999999999999);
+        // Generate secure token
+        $token = bin2hex(random_bytes(32));
 
         /*
             respHandler usage sample
@@ -98,7 +99,7 @@ class Signup extends Db
                 $stmt = $this->con()->prepare($sql);
                 $stmt->execute([$firstname, $middlename, $othername, $gender, $email, $tel, $hashedPassword, $token]);
 
-                return $this->resHandler("er08", "Signup successful!");
+                return $this->resHandler("su01", "Signup successful!");
             }
         }
     }

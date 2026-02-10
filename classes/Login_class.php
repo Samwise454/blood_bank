@@ -60,9 +60,24 @@
                     $passwordVerify = password_verify($password, $result[0]["password"]);
 
                     if ($passwordVerify === true) {
-                        //data verified, login user
-                        $token = $result[0]["token"];
-                        return $token;
+                        //data verified, regenerate token
+                        $token = bin2hex(random_bytes(32));
+
+                        // Optional expiry (24 hrs)
+                        // $expiry = date("Y-m-d H:i:s", strtotime("+1 day"));
+
+                        //now we update the table with the regenerated token to keep it fresh
+                        $sql = "UPDATE userData SET token=? WHERE email=?";
+                        $stmt = $this->con()->prepare($sql);
+                        $stmt->execute([$token, $email]);
+                        
+                        $data = [
+                            "id"=>$result[0]["id"],
+                            "lastname"=>$result[0]["lastname"],
+                            "tel"=>$result[0]["tel"],
+                            "token"=>$token
+                        ];
+                        return $data;
                     }
                     else if ($passwordVerify === false) {
                         return $this->resHandler("el03", "Invalid email or password!");
