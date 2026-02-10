@@ -56,7 +56,21 @@
                 $stmt->execute([$email]);
                 $result = $stmt->fetchAll();
 
-                return $result;
+                if (count($result) > 0) {
+                    $passwordVerify = password_verify($password, $result[0]["password"]);
+
+                    if ($passwordVerify === true) {
+                        //data verified, login user
+                        $token = $result[0]["token"];
+                        return $token;
+                    }
+                    else if ($passwordVerify === false) {
+                        return $this->resHandler("el03", "Invalid email or password!");
+                    }
+                }
+                else {
+                    return $this->resHandler("el04", "User doesn't exist!");
+                }
             }
         }
     }
