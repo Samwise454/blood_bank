@@ -39,8 +39,24 @@
                     return $this->resHandler("bbe_001", "Empty or invalid input");
                 }
             */
+            
+            $email = $data["email"];
+            $password = $data["password"];
 
-           return $this->resHandler("testing", "Everything is working");
+            if (empty($email) || empty($password)) {
+                return $this->resHandler("el01", "Empty/invalid input!");
+            }
+            else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return $this->resHandler("el02", "Check email!");
+            }
+            else {
+                //let's check userData table for email existence
+                $sql = "SELECT email, token, password FROM userData WHERE email=? LIMIT 1";
+                $stmt = $this->con()->prepare($sql);
+                $stmt->execute([$email]);
+                $result = $stmt->fetchAll();
 
+                return $result;
+            }
         }
     }
