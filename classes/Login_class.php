@@ -58,7 +58,7 @@
 
                 if (count($result) > 0) {
                     $passwordVerify = password_verify($password, $result[0]["password"]);
-
+return $result;
                     if ($passwordVerify === true) {
                         //data verified, regenerate token
                         $token = bin2hex(random_bytes(32));
@@ -73,7 +73,7 @@
                         
                         $data = [
                             "id"=>$result["id"],
-                            "lastname"=>$result["lastname"],
+                            "lastname"=>$result["lastName"],
                             "tel"=>$result["tel"],
                             "token"=>$token
                         ];
