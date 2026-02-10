@@ -51,14 +51,14 @@
             }
             else {
                 //let's check userData table for email existence
-                $sql = "SELECT email, token, password FROM userData WHERE email=? LIMIT 1";
+                $sql = "SELECT id, email, lastName, tel, token, password FROM userData WHERE email=? LIMIT 1";
                 $stmt = $this->con()->prepare($sql);
                 $stmt->execute([$email]);
                 $result = $stmt->fetchAll();
 
                 if (count($result) > 0) {
                     $passwordVerify = password_verify($password, $result[0]["password"]);
-return $result;
+
                     if ($passwordVerify === true) {
                         //data verified, regenerate token
                         $token = bin2hex(random_bytes(32));
@@ -72,9 +72,9 @@ return $result;
                         $stmt->execute([$token, $email]);
                         
                         $data = [
-                            "id"=>$result["id"],
-                            "lastname"=>$result["lastName"],
-                            "tel"=>$result["tel"],
+                            "id"=>$result[0]["id"],
+                            "lastname"=>$result[0]["lastName"],
+                            "tel"=>$result[0]["tel"],
                             "token"=>$token
                         ];
                         return $data;
