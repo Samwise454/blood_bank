@@ -84,7 +84,7 @@
                     }
                 }
                 else {
-                    return $this->resHandler("el04", "User doesn't exist!");
+                    return $this->resHandler("el04", "Invalid email or password!");
                 }
             }
         }
